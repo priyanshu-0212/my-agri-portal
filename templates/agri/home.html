@@ -1,0 +1,132 @@
+{% extends 'agri/base.html' %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section text-center">
+    <div class="container">
+        <h1 class="display-4 mb-4">Fair Trade Agri Portal</h1>
+        <p class="lead mb-4">Connecting Farmers with Buyers for Fair Market Prices</p>
+        {% if not user.is_authenticated %}
+            <a href="{% url 'register' %}" class="btn btn-light btn-lg me-2">Get Started</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light btn-lg">Login</a>
+        {% else %}
+            {% if user.role == 'farmer' %}
+                <a href="{% url 'product_add' %}" class="btn btn-light btn-lg me-2">Add New Product</a>
+                <a href="{% url 'farmer_dashboard' %}" class="btn btn-outline-light btn-lg">My Dashboard</a>
+            {% else %}
+                <a href="{% url 'buyer_dashboard' %}" class="btn btn-light btn-lg">Browse Crops</a>
+            {% endif %}
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-md-12">
+                <h2 class="mb-4">Why Choose Fair Trade Agri Portal?</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="bi bi-shop fs-1 text-success mb-3"></i>
+                        <h4>Direct Marketplace</h4>
+                        <p>Connect directly with buyers and get fair market prices for your produce.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="bi bi-graph-up-arrow fs-1 text-primary mb-3"></i>
+                        <h4>Live Market Rates</h4>
+                        <p>Stay updated with current market rates for various crops and make informed decisions.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="bi bi-people fs-1 text-warning mb-3"></i>
+                        <h4>Easy Communication</h4>
+                        <p>Send and receive inquiries directly with farmers or buyers through our platform.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Products Section -->
+{% if latest_products %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-5">Latest Products</h2>
+        <div class="row">
+            {% for product in latest_products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-image fs-1 text-white"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">
+                            <strong>Price:</strong> ₹{{ product.price_per_unit }}/{{ product.unit }}<br>
+                            <strong>Quantity:</strong> {{ product.quantity }} {{ product.unit }}<br>
+                            <strong>Farmer:</strong> {{ product.farmer.username }}
+                        </p>
+                        <a href="{% url 'product_detail' product.pk %}" class="btn btn-success btn-sm">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'buyer_dashboard' %}" class="btn btn-primary btn-lg">View All Products</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Market Rates Preview -->
+{% if market_rates %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-5">Current Market Rates</h2>
+        <div class="row">
+            <div class="col-md-8 mx-auto">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-success">
+                            <tr>
+                                <th>Crop Name</th>
+                                <th>Price/Unit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rate in market_rates %}
+                            <tr>
+                                <td>{{ rate.crop_name }}</td>
+                                <td>₹{{ rate.average_price }}/{{ rate.unit }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="{% url 'market_rates' %}" class="btn btn-outline-primary">View All Market Rates</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

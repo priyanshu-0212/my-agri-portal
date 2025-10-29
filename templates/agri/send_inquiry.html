@@ -1,0 +1,45 @@
+{% extends 'agri/base.html' %}
+
+{% block title %}Send Inquiry - Fair Trade Agri Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h3><i class="bi bi-envelope-paper"></i> Send Inquiry</h3>
+                </div>
+                <div class="card-body">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5>{{ product.name }}</h5>
+                            <p><strong>Price:</strong> ₹{{ product.price_per_unit }}/{{ product.unit }}</p>
+                            <p><strong>Quantity Available:</strong> {{ product.quantity }} {{ product.unit }}</p>
+                            <p><strong>Farmer:</strong> {{ product.farmer.username }}</p>
+                        </div>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_message" class="form-label">Your Message *</label>
+                            {{ form.message }}
+                        </div>
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'product_detail' product.pk %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-send"></i> Send Inquiry
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

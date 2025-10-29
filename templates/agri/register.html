@@ -1,0 +1,71 @@
+{% extends 'agri/base.html' %}
+
+{% block title %}Register - Fair Trade Agri Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white text-center">
+                    <h3><i class="bi bi-person-plus"></i> Create Account</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_username" class="form-label">Username</label>
+                                {{ form.username }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_email" class="form-label">Email</label>
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_role" class="form-label">I am a...</label>
+                            {{ form.role }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_phone" class="form-label">Phone (Optional)</label>
+                            {{ form.phone }}
+                        </div>
+                        <div class="mb-3">
+                            <label for="id_address" class="form-label">Address (Optional)</label>
+                            {{ form.address }}
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="id_password1" class="form-label">Password</label>
+                                {{ form.password1 }}
+                                {% if form.password1.help_text %}
+                                    <small class="form-text text-muted">{{ form.password1.help_text }}</small>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="id_password2" class="form-label">Confirm Password</label>
+                                {{ form.password2 }}
+                            </div>
+                        </div>
+                        {% if form.errors %}
+                            <div class="alert alert-danger">
+                                {{ form.errors }}
+                            </div>
+                        {% endif %}
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-person-plus"></i> Register
+                            </button>
+                        </div>
+                    </form>
+                    <hr>
+                    <p class="text-center">
+                        Already have an account? <a href="{% url 'login' %}">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

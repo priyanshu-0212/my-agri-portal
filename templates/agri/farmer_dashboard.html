@@ -1,0 +1,61 @@
+{% extends 'agri/base.html' %}
+
+{% block title %}Farmer Dashboard - Fair Trade Agri Portal{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-speedometer2"></i> Farmer Dashboard</h2>
+        <a href="{% url 'product_add' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Add New Product
+        </a>
+    </div>
+
+    {% if products %}
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-image fs-1 text-white"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text">
+                            <strong>Price:</strong> ₹{{ product.price_per_unit }}/{{ product.unit }}<br>
+                            <strong>Quantity:</strong> {{ product.quantity }} {{ product.unit }}<br>
+                            <strong>Total:</strong> ₹{{ product.total_price|floatformat:2 }}<br>
+                            <span class="badge bg-{% if product.is_available %}success{% else %}secondary{% endif %}">
+                                {% if product.is_available %}Available{% else %}Sold Out{% endif %}
+                            </span>
+                        </p>
+                        {% if product.description %}
+                            <p class="card-text"><small class="text-muted">{{ product.description|truncatewords:10 }}</small></p>
+                        {% endif %}
+                        <div class="btn-group w-100" role="group">
+                            <a href="{% url 'product_detail' product.pk %}" class="btn btn-primary btn-sm">View</a>
+                            <a href="{% url 'product_edit' product.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                        </div>
+                    </div>
+                    <div class="card-footer text-muted">
+                        <small>Posted: {{ product.created_at|date:"M d, Y" }}</small>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle fs-1"></i>
+            <h4>No products yet!</h4>
+            <p>Start by adding your first product to get started.</p>
+            <a href="{% url 'product_add' %}" class="btn btn-success">Add Product</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
